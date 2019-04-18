@@ -1,28 +1,49 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import './App.css'
+//导入store
+import store from './store'
+import { increment, decrement } from './action'
+
+import { Provider, connect } from 'react-redux'
+// 抽离组件
+function Counter(props) {
+  return (
+    <div className="App">
+      <h3>计数器: {props.counter}</h3>
+      <button onClick={props.increment}>+</button>
+      <button onClick={props.decrement}>-</button>
+    </div>
+  )
+}
+const mapStateToProps = state => {
+  return {
+    counter: state
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    increment() {
+      dispatch(increment(10))
+    },
+    decrement() {
+      dispatch(decrement(5))
+    }
+  }
+}
+const CounterContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Counter)
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+      <Provider store={store}>
+        <CounterContainer />
+      </Provider>
+    )
   }
 }
 
-export default App;
+export default App
